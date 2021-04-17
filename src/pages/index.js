@@ -1,7 +1,7 @@
 import React from "react"
 import styled from "styled-components"
 import WordCloud from "../components/WordCloud"
-import Header from "../components/header"
+import Header from "../components/Header"
 
 const Container = styled.div`
   margin: 1rem auto;
