@@ -2,6 +2,7 @@ import React from "react"
 import styled from "styled-components"
 import "d3-transition"
 import { select } from "d3-selection"
+import * as d3 from "d3"
 import ReactDOM from "react-dom"
 import ReactWordcloud from "react-wordcloud"
 import { Resizable } from "re-resizable"
@@ -27,15 +28,43 @@ const resizeStyle = {
 
 function getCallback(callback) {
   return function (word, event) {
-    const isActive = callback !== "onWordMouseOut"
+    // textEl.addEventListener("mouseover", event => {
+    //   document.body.style.background = "blue"
+    // })
+    const isActive = callback === "onWordMouseOver"
+    const isMouseOut = callback === "onWordMouseOut"
     const element = event.target
     const text = select(element)
+
+    let textEl = document.querySelectorAll("text")
 
     text
       .on("click", () => {
         if (isActive) {
           window.open(`https://duckduckgo.com/?q=${word.text}`, "_blank")
         }
+      })
+      .on("mouseover", () => {
+        textEl.forEach(textChild => {
+          if (
+            word.text.substr(0, 1) === textChild.firstChild.data.substr(0, 1)
+          ) {
+            textChild.style.color = "red"
+            textChild.style.fontSize = "50px"
+            textChild.style.transitionDuration = "2s"
+          }
+        })
+      })
+      .on("mouseleave", () => {
+        textEl.forEach(textChild => {
+          if (
+            word.text.substr(0, 1) === textChild.firstChild.data.substr(0, 1)
+          ) {
+            textChild.style.color = "blue"
+            textChild.style.fontSize = "15px"
+            textChild.style.transitionDuration = "2s"
+          }
+        })
       })
       .transition()
       .attr("background", "white")
@@ -45,12 +74,17 @@ function getCallback(callback) {
 }
 
 const callbacks = {
+  //   getWordColor: word => getColors(word),
   getWordTooltip: word => `"${word.text}" ${word.value} `,
   onWordClick: getCallback("onWordClick"),
+  // onWordMouseOut: getCallback("onWordMouseOut"),
   onWordMouseOut: getCallback("onWordMouseOut"),
   onWordMouseOver: getCallback("onWordMouseOver"),
 }
-
+// const options = {
+//   rotations: 1,
+//   rotationAngles: [0, 0],
+// }
 const options = {
   colors: ["#1f77b4", "#ff7f0e", "#2ca02c", "#d62728", "#9467bd", "#8c564b"],
   enableTooltip: true,
