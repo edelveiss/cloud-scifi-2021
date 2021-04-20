@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useEffect } from "react"
 import styled from "styled-components"
 import "d3-transition"
 import { select } from "d3-selection"
@@ -26,79 +26,112 @@ const resizeStyle = {
   background: "#E7EAED",
 }
 
+let wordSizeMap = {}
+let isWordSizeMapActivated = false
+
 function getCallback(callback) {
   return function (word, event) {
-    // textEl.addEventListener("mouseover", event => {
-    //   document.body.style.background = "blue"
-    // })
-    const isActive = callback === "onWordMouseOver"
-    const isMouseOut = callback === "onWordMouseOut"
     const element = event.target
     const text = select(element)
-
+    const isActive = callback !== "onWordMouseOut"
     let textEl = document.querySelectorAll("text")
+    let arrTextEll = Array.from(textEl)
+
+    if (!isWordSizeMapActivated) {
+      textEl.forEach(
+        d =>
+          (wordSizeMap[d.innerHTML] = window
+            .getComputedStyle(d, null)
+            .getPropertyValue("font-size"))
+      )
+      console.log("wordSizeMap", wordSizeMap)
+      isWordSizeMapActivated = true
+    }
 
     text
-      .on("click", () => {
-        if (isActive) {
-          window.open(`https://duckduckgo.com/?q=${word.text}`, "_blank")
-        }
-      })
       .on("mouseover", () => {
-        textEl.forEach(textChild => {
-          if (
-            word.text.substr(0, 1) === textChild.firstChild.data.substr(0, 1)
-          ) {
-            textChild.style.color = "red"
-            textChild.style.fontSize = "50px"
-            textChild.style.transitionDuration = "2s"
-          }
+        arrTextEll
+          .filter(
+            textChild =>
+              word.text.substr(0, 1) === textChild.firstChild.data.substr(0, 1)
+          )
+          .map(el => {
+            el.style.fontSize = "300%"
+            el.style.transitionDuration = "0.5s"
+            return el
+          })
+        text.attr("text-decoration", "underline").attr("cursor", "pointer")
+
+        text.on("click", () => {
+          window.open(`https://duckduckgo.com/?q=${word.text}`, "_blank")
         })
+
+        arrTextEll
+          .filter(
+            textChild =>
+              word.text.substr(0, 1) !== textChild.firstChild.data.substr(0, 1)
+          )
+          .map(el => {
+            el.style.transitionDuration = "0.5s"
+            el.style.opacity = "0.4"
+            return el
+          })
       })
       .on("mouseleave", () => {
-        textEl.forEach(textChild => {
-          if (
-            word.text.substr(0, 1) === textChild.firstChild.data.substr(0, 1)
-          ) {
-            textChild.style.color = "blue"
-            textChild.style.fontSize = "15px"
-            textChild.style.transitionDuration = "2s"
-          }
-        })
+        arrTextEll
+          .filter(
+            textChild =>
+              word.text.substr(0, 1) === textChild.firstChild.data.substr(0, 1)
+          )
+          .map(el => {
+            el.style.fontSize = wordSizeMap[el.firstChild.data]
+            el.style.transitionDuration = "0.5s"
+            return el
+          })
+
+        arrTextEll
+          .filter(
+            textChild =>
+              word.text.substr(0, 1) !== textChild.firstChild.data.substr(0, 1)
+          )
+          .map(el => {
+            el.style.transitionDuration = "0.5s"
+            el.style.opacity = "1"
+            return el
+          })
+
+        text.attr("text-decoration", "none").attr("cursor", "none")
       })
       .transition()
-      .attr("background", "white")
-      .attr("font-size", isActive ? "300%" : "100%")
-      .attr("text-decoration", isActive ? "underline" : "none")
+    // .attr("background", "white")
+    // .attr("font-size", isActive ? "300%" : "100%")
+    // .attr("text-decoration", isActive ? "underline" : "none")
   }
 }
 
 const callbacks = {
-  //   getWordColor: word => getColors(word),
   getWordTooltip: word => `"${word.text}" ${word.value} `,
-  onWordClick: getCallback("onWordClick"),
-  // onWordMouseOut: getCallback("onWordMouseOut"),
   onWordMouseOut: getCallback("onWordMouseOut"),
   onWordMouseOver: getCallback("onWordMouseOver"),
 }
-// const options = {
-//   rotations: 1,
-//   rotationAngles: [0, 0],
-// }
+
 const options = {
   colors: ["#1f77b4", "#ff7f0e", "#2ca02c", "#d62728", "#9467bd", "#8c564b"],
-  enableTooltip: true,
+  // enableTooltip: true,
   deterministic: false,
   fontFamily: "impact",
+  // fontFamily: "sans-serif",
   fontSizes: [5, 60],
   fontStyle: "normal",
   fontWeight: "normal",
   padding: 1,
+  // rotations: 1,
+  // rotationAngles: [0, 0],
   rotations: 3,
   rotationAngles: [0, 90],
   scale: "sqrt",
   spiral: "archimedean",
-  transitionDuration: 1000,
+  // transitionDuration: 700,
 }
 
 const size = [600, 400]
