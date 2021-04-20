@@ -7,7 +7,7 @@ import Header from "../components/Header"
 
 const Container = styled.div`
   margin: 1rem auto;
-  max-width: 1000px;
+  max-width: 800px;
   display: flex;
   flex-direction: column;
   align-items: center;

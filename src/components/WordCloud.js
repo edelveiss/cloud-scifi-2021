@@ -1,9 +1,7 @@
-import React, { useEffect } from "react"
+import React from "react"
 import styled from "styled-components"
 import "d3-transition"
 import { select } from "d3-selection"
-import * as d3 from "d3"
-import ReactDOM from "react-dom"
 import ReactWordcloud from "react-wordcloud"
 import { Resizable } from "re-resizable"
 
@@ -33,7 +31,6 @@ function getCallback(callback) {
   return function (word, event) {
     const element = event.target
     const text = select(element)
-    const isActive = callback !== "onWordMouseOut"
     let textEl = document.querySelectorAll("text")
     let arrTextEll = Array.from(textEl)
 
@@ -44,7 +41,6 @@ function getCallback(callback) {
             .getComputedStyle(d, null)
             .getPropertyValue("font-size"))
       )
-      console.log("wordSizeMap", wordSizeMap)
       isWordSizeMapActivated = true
     }
     //--------------mouseover----------------------
@@ -113,10 +109,8 @@ const callbacks = {
 
 const options = {
   colors: ["#1f77b4", "#ff7f0e", "#2ca02c", "#d62728", "#9467bd", "#8c564b"],
-  // enableTooltip: true,
   deterministic: false,
   fontFamily: "impact",
-  // fontFamily: "sans-serif",
   fontSizes: [5, 60],
   fontStyle: "normal",
   fontWeight: "normal",
@@ -127,10 +121,8 @@ const options = {
   rotationAngles: [0, 90],
   scale: "sqrt",
   spiral: "archimedean",
-  // transitionDuration: 700,
 }
 
-// const size = [600, 400]
 const size = [800, 600]
 function WordCloud() {
   return (
