@@ -1,4 +1,4 @@
-export default [
+const words = [
   {
     text: "told",
     value: 64,
@@ -500,3 +500,4 @@ export default [
     value: 10,
   },
 ]
+export default words
