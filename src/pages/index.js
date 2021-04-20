@@ -20,7 +20,7 @@ export default function Home() {
 
   return (
     <Container>
-      <Header headerText="React WordCloud" />
+      <Header headerText="Movie WordCloud" />
       <WordCloud />
     </Container>
   )

@@ -47,65 +47,61 @@ function getCallback(callback) {
       console.log("wordSizeMap", wordSizeMap)
       isWordSizeMapActivated = true
     }
+    //--------------mouseover----------------------
+    if (callback === "onWordMouseOver") {
+      arrTextEll
+        .filter(
+          textChild =>
+            word.text.substr(0, 1) === textChild.firstChild.data.substr(0, 1)
+        )
+        .map(el => {
+          el.style.fontSize = "300%"
+          el.style.transitionDuration = "0.5s"
+          return el
+        })
+      text.attr("text-decoration", "underline").attr("cursor", "pointer")
 
-    text
-      .on("mouseover", () => {
-        arrTextEll
-          .filter(
-            textChild =>
-              word.text.substr(0, 1) === textChild.firstChild.data.substr(0, 1)
-          )
-          .map(el => {
-            el.style.fontSize = "300%"
-            el.style.transitionDuration = "0.5s"
-            return el
-          })
-        text.attr("text-decoration", "underline").attr("cursor", "pointer")
+      text.on("click", () => {
+        window.open(`https://duckduckgo.com/?q=${word.text}`, "_blank")
+      })
 
-        text.on("click", () => {
-          window.open(`https://duckduckgo.com/?q=${word.text}`, "_blank")
+      arrTextEll
+        .filter(
+          textChild =>
+            word.text.substr(0, 1) !== textChild.firstChild.data.substr(0, 1)
+        )
+        .map(el => {
+          el.style.transitionDuration = "0.5s"
+          el.style.opacity = "0.4"
+          return el
+        })
+    }
+    //--------------mouseleave----------------------
+    if (callback === "onWordMouseOut") {
+      arrTextEll
+        .filter(
+          textChild =>
+            word.text.substr(0, 1) === textChild.firstChild.data.substr(0, 1)
+        )
+        .map(el => {
+          el.style.fontSize = wordSizeMap[el.firstChild.data]
+          el.style.transitionDuration = "0.5s"
+          return el
         })
 
-        arrTextEll
-          .filter(
-            textChild =>
-              word.text.substr(0, 1) !== textChild.firstChild.data.substr(0, 1)
-          )
-          .map(el => {
-            el.style.transitionDuration = "0.5s"
-            el.style.opacity = "0.4"
-            return el
-          })
-      })
-      .on("mouseleave", () => {
-        arrTextEll
-          .filter(
-            textChild =>
-              word.text.substr(0, 1) === textChild.firstChild.data.substr(0, 1)
-          )
-          .map(el => {
-            el.style.fontSize = wordSizeMap[el.firstChild.data]
-            el.style.transitionDuration = "0.5s"
-            return el
-          })
+      arrTextEll
+        .filter(
+          textChild =>
+            word.text.substr(0, 1) !== textChild.firstChild.data.substr(0, 1)
+        )
+        .map(el => {
+          el.style.transitionDuration = "0.5s"
+          el.style.opacity = "1"
+          return el
+        })
 
-        arrTextEll
-          .filter(
-            textChild =>
-              word.text.substr(0, 1) !== textChild.firstChild.data.substr(0, 1)
-          )
-          .map(el => {
-            el.style.transitionDuration = "0.5s"
-            el.style.opacity = "1"
-            return el
-          })
-
-        text.attr("text-decoration", "none").attr("cursor", "none")
-      })
-      .transition()
-    // .attr("background", "white")
-    // .attr("font-size", isActive ? "300%" : "100%")
-    // .attr("text-decoration", isActive ? "underline" : "none")
+      text.attr("text-decoration", "none").attr("cursor", "none")
+    }
   }
 }
 
@@ -134,7 +130,8 @@ const options = {
   // transitionDuration: 700,
 }
 
-const size = [600, 400]
+// const size = [600, 400]
+const size = [800, 600]
 function WordCloud() {
   return (
     <WCContainer>
