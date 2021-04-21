@@ -9,17 +9,12 @@ module.exports = {
   plugins: [
     `gatsby-plugin-styled-components`,
     `babel-plugin-styled-components`,
+    `gatsby-transformer-csv`,
     {
       resolve: `gatsby-source-filesystem`,
       options: {
-        name: `data`,
+        name: `movies`,
         path: `${__dirname}/src/data/`,
-      },
-    },
-    {
-      resolve: `gatsby-transformer-csv`,
-      options: {
-        noheader: true,
       },
     },
   ],
