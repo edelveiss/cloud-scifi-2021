@@ -13,8 +13,17 @@ module.exports = {
     {
       resolve: `gatsby-source-filesystem`,
       options: {
-        name: `movies`,
+        name: `movies1`,
         path: `${__dirname}/src/data/`,
+      },
+    },
+    {
+      resolve: `gatsby-source-notion-api`,
+      options: {
+        // token: `$INTEGRATION_TOKEN`,
+        // databaseId: `$DATABASE_ID`,
+        token: `secret_BIwWWzzjMuWddXGUbODp6qMm7Zy8E6hMTqWe3hCFE7C`,
+        databaseId: `dc0ccb9b5767483e9fe411acb20abefa`,
       },
     },
   ],

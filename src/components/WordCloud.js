@@ -15,6 +15,18 @@ const WCContainer = styled.div`
   flex-direction: column;
   align-items: flex-start;
   justify-content: flex-start;
+  clip-path: polygon(
+    49% 30%,
+    68% 34%,
+    88% 37%,
+    93% 65%,
+    70% 61%,
+    88% 92%,
+    38% 67%,
+    25% 63%,
+    19% 46%,
+    31% 38%
+  );
 `
 const resizeStyle = {
   display: "flex",
@@ -33,7 +45,14 @@ function WordCloud({ movieNodes }) {
       const element = event.target
       const text = select(element)
       let textEl = document.querySelectorAll("text")
+
       let arrTextEll = Array.from(textEl)
+      // console.log("arrTextEll", arrTextEll)
+      // arrTextEll.forEach(el => {
+      //   if (el.firstChild !== null) {
+      //     console.log("dataChild==>>", el.firstChild.data)
+      //   }
+      // })
 
       if (!isWordSizeMapActivated) {
         textEl.forEach(
@@ -44,9 +63,11 @@ function WordCloud({ movieNodes }) {
         )
         isWordSizeMapActivated = true
       }
+
       //--------------mouseover----------------------
       if (callback === "onWordMouseOver") {
         arrTextEll
+          .filter(el => el.firstChild !== null)
           .filter(
             textChild =>
               word.text.substr(0, 1) === textChild.firstChild.data.substr(0, 1)
@@ -63,6 +84,7 @@ function WordCloud({ movieNodes }) {
         })
 
         arrTextEll
+          .filter(el => el.firstChild !== null)
           .filter(
             textChild =>
               word.text.substr(0, 1) !== textChild.firstChild.data.substr(0, 1)
@@ -76,6 +98,7 @@ function WordCloud({ movieNodes }) {
       //--------------mouseleave----------------------
       if (callback === "onWordMouseOut") {
         arrTextEll
+          .filter(el => el.firstChild !== null)
           .filter(
             textChild =>
               word.text.substr(0, 1) === textChild.firstChild.data.substr(0, 1)
@@ -87,6 +110,7 @@ function WordCloud({ movieNodes }) {
           })
 
         arrTextEll
+          .filter(el => el.firstChild !== null)
           .filter(
             textChild =>
               word.text.substr(0, 1) !== textChild.firstChild.data.substr(0, 1)
