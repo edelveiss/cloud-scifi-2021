@@ -49,9 +49,9 @@ export default function Home({ data }) {
         }
         edge.node.Name_of_BCI.split(/[\s,/]+/).forEach(association => {
           if (bciDict[word]) {
-            bciDict[word].add(association)
+            bciDict[word].add(association.toLowerCase())
           } else {
-            bciDict[word] = new Set([association])
+            bciDict[word] = new Set([association.toLowerCase()])
           }
         })
       }
@@ -60,7 +60,7 @@ export default function Home({ data }) {
 
   let movieNodes = []
   // console.log("dataDict", dataDict)
-  // console.log("bciDict", bciDict)
+  console.log("bciDict", bciDict)
   for (var key in dataDict) {
     movieNodes.push({ text: key, value: dataDict[key], tooltip: key })
   }
@@ -68,7 +68,7 @@ export default function Home({ data }) {
   return (
     <Container>
       <Header headerText="Movie WordCloud" />
-      <WordCloud movieNodes={movieNodes} />
+      <WordCloud movieNodes={movieNodes} bciDict={bciDict} />
     </Container>
   )
 }

@@ -15,19 +15,20 @@ const WCContainer = styled.div`
   flex-direction: column;
   align-items: flex-start;
   justify-content: flex-start;
-  clip-path: polygon(
-    49% 30%,
-    68% 34%,
-    88% 37%,
-    93% 65%,
-    70% 61%,
-    88% 92%,
-    38% 67%,
-    25% 63%,
-    19% 46%,
-    31% 38%
-  );
 `
+// clip-path: polygon(
+//   49% 30%,
+//   68% 34%,
+//   88% 37%,
+//   93% 65%,
+//   70% 61%,
+//   88% 92%,
+//   38% 67%,
+//   25% 63%,
+//   19% 46%,
+//   31% 38%
+// );
+
 const resizeStyle = {
   display: "flex",
   alignItems: "center",
@@ -36,7 +37,7 @@ const resizeStyle = {
   background: "#E7EAED",
 }
 
-function WordCloud({ movieNodes }) {
+function WordCloud({ movieNodes, bciDict }) {
   let wordSizeMap = {}
   let isWordSizeMapActivated = false
 
@@ -48,11 +49,14 @@ function WordCloud({ movieNodes }) {
 
       let arrTextEll = Array.from(textEl)
       // console.log("arrTextEll", arrTextEll)
-      // arrTextEll.forEach(el => {
-      //   if (el.firstChild !== null) {
-      //     console.log("dataChild==>>", el.firstChild.data)
-      //   }
-      // })
+      arrTextEll.forEach(el => {
+        if (el.firstChild !== null) {
+          if (bciDict[word.text].has(el.firstChild.data)) {
+            console.log("dataChild==>>", el.firstChild.data)
+            console.log("bciDict[word.text]", bciDict[word.text])
+          }
+        }
+      })
 
       if (!isWordSizeMapActivated) {
         textEl.forEach(
@@ -69,8 +73,9 @@ function WordCloud({ movieNodes }) {
         arrTextEll
           .filter(el => el.firstChild !== null)
           .filter(
-            textChild =>
-              word.text.substr(0, 1) === textChild.firstChild.data.substr(0, 1)
+            textChild => bciDict[word.text].has(textChild.firstChild.data)
+            // bciDict[textChild.firstChild.data].has(word.text)
+            // word.text.substr(0, 1) === textChild.firstChild.data.substr(0, 1)
           )
           .map(el => {
             el.style.fontSize = "300%"
@@ -86,8 +91,11 @@ function WordCloud({ movieNodes }) {
         arrTextEll
           .filter(el => el.firstChild !== null)
           .filter(
-            textChild =>
-              word.text.substr(0, 1) !== textChild.firstChild.data.substr(0, 1)
+            textChild => !bciDict[word.text].has(textChild.firstChild.data)
+            // !bciDict[textChild.firstChild.data].has(word.text)
+            //  &&
+            // bciDict[textChild.firstChild.data].length > 1
+            // word.text.substr(0, 1) !== textChild.firstChild.data.substr(0, 1)
           )
           .map(el => {
             el.style.transitionDuration = "0.5s"
@@ -100,8 +108,9 @@ function WordCloud({ movieNodes }) {
         arrTextEll
           .filter(el => el.firstChild !== null)
           .filter(
-            textChild =>
-              word.text.substr(0, 1) === textChild.firstChild.data.substr(0, 1)
+            textChild => bciDict[word.text].has(textChild.firstChild.data)
+            // bciDict[textChild.firstChild.data].has(word.text)
+            // word.text.substr(0, 1) === textChild.firstChild.data.substr(0, 1)
           )
           .map(el => {
             el.style.fontSize = wordSizeMap[el.firstChild.data]
@@ -112,8 +121,11 @@ function WordCloud({ movieNodes }) {
         arrTextEll
           .filter(el => el.firstChild !== null)
           .filter(
-            textChild =>
-              word.text.substr(0, 1) !== textChild.firstChild.data.substr(0, 1)
+            textChild => !bciDict[word.text].has(textChild.firstChild.data)
+            // !bciDict[textChild.firstChild.data].has(word.text)
+            // &&
+            // bciDict[textChild.firstChild.data].length > 1
+            // word.text.substr(0, 1) !== textChild.firstChild.data.substr(0, 1)
           )
           .map(el => {
             el.style.transitionDuration = "0.5s"
@@ -138,7 +150,7 @@ function WordCloud({ movieNodes }) {
     deterministic: false,
     fontFamily: "impact",
     // fontSizes: [5, 60],
-    fontSizes: [10, 40],
+    fontSizes: [16, 64],
     fontStyle: "normal",
     fontWeight: "normal",
     padding: 1,
